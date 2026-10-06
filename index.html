@@ -1,25 +1,839 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Online Quiz Application</title>
+  <title>QuizMaster — Test, Learn & Master Knowledge</title>
+  <meta name="description" content="A modern, feature-rich web quiz application with multiple categories, difficulty levels, streak tracking, analytics, and question review.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="app">
-    <h1>Simple Quiz</h1>
-    <div class="quiz">
-      <h2 id="question">Question goes here</h2>
-      <div id="answer-buttons">
-        <button class="btn">Answer 1</button>
-        <button class="btn">Answer 2</button>
-        <button class="btn">Answer 3</button>
-        <button class="btn">Answer 4</button>
+  <!-- Skip Link for Accessibility -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- Header / Navigation Bar -->
+  <header class="app-header" role="banner">
+    <div class="header-container">
+      <div class="brand" id="brand-logo" role="button" tabindex="0" aria-label="QuizMaster Home">
+        <div class="brand-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+          </svg>
+        </div>
+        <span class="brand-name">Quiz<span>Master</span></span>
       </div>
-      <button id="next-btn">Next</button>
+
+      <nav class="nav-links" id="nav-links" role="navigation" aria-label="Main Navigation">
+        <button class="nav-item active" data-view="home">Home</button>
+        <button class="nav-item" data-view="categories">Categories</button>
+        <button class="nav-item" data-view="dashboard">Dashboard</button>
+        <button class="nav-item" data-view="leaderboard">Leaderboard</button>
+        <button class="nav-item" data-view="bookmarks">Saved</button>
+        <button class="nav-item" data-view="history">History</button>
+        <button class="nav-item" data-view="settings">Settings</button>
+      </nav>
+
+      <div class="header-actions">
+        <!-- Streak Counter -->
+        <div class="streak-badge" id="header-streak-badge" title="Daily quiz streak">
+          <span class="streak-icon" aria-hidden="true">🔥</span>
+          <span class="streak-count" id="header-streak-count">0</span>
+          <span class="streak-label">Streak</span>
+        </div>
+
+        <!-- Theme Toggle -->
+        <button class="icon-btn theme-toggle" id="theme-toggle-btn" aria-label="Toggle light or dark theme" title="Toggle Theme">
+          <span class="theme-icon light-icon" aria-hidden="true">☀️</span>
+          <span class="theme-icon dark-icon" aria-hidden="true">🌙</span>
+        </button>
+
+        <!-- Mobile Menu Toggle -->
+        <button class="icon-btn hamburger-btn" id="mobile-menu-btn" aria-label="Toggle navigation menu" aria-expanded="false">
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Drawer Navigation -->
+    <div class="mobile-drawer" id="mobile-drawer" aria-hidden="true">
+      <nav class="mobile-nav-links">
+        <button class="mobile-nav-item active" data-view="home">🏠 Home</button>
+        <button class="mobile-nav-item" data-view="categories">📚 Categories</button>
+        <button class="mobile-nav-item" data-view="dashboard">📊 Dashboard</button>
+        <button class="mobile-nav-item" data-view="leaderboard">🏆 Leaderboard</button>
+        <button class="mobile-nav-item" data-view="bookmarks">🔖 Saved Questions</button>
+        <button class="mobile-nav-item" data-view="history">📜 Quiz History</button>
+        <button class="mobile-nav-item" data-view="settings">⚙️ Settings</button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content Views Container -->
+  <main id="main-content" class="main-content" role="main">
+
+    <!-- ================= VIEW 1: LANDING / HOME ================= -->
+    <section id="view-home" class="view-section active" aria-label="Landing Page">
+      <div class="hero-section">
+        <div class="hero-badge">
+          <span class="badge-dot"></span> Portfolio-Grade Assessment Platform
+        </div>
+        <h1 class="hero-title">
+          Test Your Knowledge. <span class="gradient-text">Track Your Progress.</span> Master Every Topic.
+        </h1>
+        <p class="hero-subtitle">
+          Challenge yourself with 110+ vetted questions across modern programming, data structures, algorithms, databases, and general knowledge. Level up your problem-solving skills today.
+        </p>
+
+        <div class="hero-cta-group">
+          <button class="btn btn-primary btn-lg" id="hero-start-btn">
+            <span class="btn-icon">⚡</span> Start Quick Quiz
+          </button>
+          <button class="btn btn-secondary btn-lg" id="hero-categories-btn">
+            <span class="btn-icon">🧭</span> Explore Categories
+          </button>
+        </div>
+
+        <!-- Live Platform Stats -->
+        <div class="stats-overview-grid">
+          <div class="stat-card">
+            <div class="stat-icon-wrap icon-purple">📚</div>
+            <div class="stat-meta">
+              <span class="stat-number" id="home-stat-total-q">110+</span>
+              <span class="stat-label">Total Questions</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon-wrap icon-blue">🏷️</div>
+            <div class="stat-meta">
+              <span class="stat-number" id="home-stat-categories">9</span>
+              <span class="stat-label">Subject Categories</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon-wrap icon-green">🎯</div>
+            <div class="stat-meta">
+              <span class="stat-number" id="home-stat-completed">0</span>
+              <span class="stat-label">Quizzes Completed</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon-wrap icon-amber">🏆</div>
+            <div class="stat-meta">
+              <span class="stat-number" id="home-stat-best">0%</span>
+              <span class="stat-label">Best Accuracy</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Daily Challenge Card -->
+      <div class="daily-challenge-banner">
+        <div class="daily-challenge-content">
+          <div class="daily-badge">
+            <span class="pulse-dot"></span> TODAY'S FEATURED CHALLENGE
+          </div>
+          <h2 class="daily-title" id="daily-challenge-title">🔥 Daily Mastery Challenge</h2>
+          <p class="daily-desc">
+            10 deterministic curated questions across varied domains • Medium Difficulty • 5 Minutes Timer. Keep your streak alive!
+          </p>
+          <div class="daily-meta-chips">
+            <span class="meta-chip">📅 <span id="daily-date-label">Today</span></span>
+            <span class="meta-chip">⚡ 10 Questions</span>
+            <span class="meta-chip">⏱ 5 Minutes</span>
+            <span class="meta-chip" id="daily-status-chip">🔥 Not Yet Completed</span>
+          </div>
+        </div>
+        <div class="daily-challenge-action">
+          <button class="btn btn-primary btn-lg" id="daily-start-btn">
+            Play Daily Challenge
+          </button>
+        </div>
+      </div>
+
+      <!-- Quick Category Highlights -->
+      <div class="section-container">
+        <div class="section-header-row">
+          <div>
+            <h2 class="section-title">Popular Quiz Domains</h2>
+            <p class="section-subtitle">Pick a domain to test your technical competencies</p>
+          </div>
+          <button class="btn btn-ghost" id="view-all-categories-btn">View All Domains &rarr;</button>
+        </div>
+
+        <div class="category-cards-grid" id="featured-categories-grid">
+          <!-- Dynamically populated via JS -->
+        </div>
+      </div>
+
+      <!-- Features Grid -->
+      <div class="section-container features-showcase">
+        <div class="section-header-centered">
+          <h2 class="section-title">Engineered for Technical Mastery</h2>
+          <p class="section-subtitle">Everything you need to practice, benchmark, and retain knowledge effectively.</p>
+        </div>
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon">💡</div>
+            <h3>Detailed Explanations</h3>
+            <p>Every single question comes with an educational rationale explaining why the correct answer is right and why alternatives fail.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">⏱</div>
+            <h3>Customizable Timers</h3>
+            <p>Practice under realistic interview test constraints (2, 5, or 10 min) with low-time visual warnings and auto-submit safety.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">📈</div>
+            <h3>Progress & Analytics</h3>
+            <p>Track category mastery percentages, cumulative accuracy, historical quiz logs, and daily streak counts.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">💾</div>
+            <h3>100% Offline Persistence</h3>
+            <p>All quiz history, bookmarked questions, settings, and active session states are safely saved in browser LocalStorage.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= VIEW 2: QUIZ CATEGORIES ================= -->
+    <section id="view-categories" class="view-section" aria-label="Categories">
+      <div class="page-header">
+        <h1 class="page-title">Explore Quiz Categories</h1>
+        <p class="page-subtitle">Select a subject domain to configure your customized quiz session</p>
+      </div>
+
+      <!-- Search & Filter Controls -->
+      <div class="filter-bar">
+        <div class="search-input-wrapper">
+          <span class="search-icon" aria-hidden="true">🔍</span>
+          <input type="text" id="category-search-input" class="search-input" placeholder="Search categories (e.g., JavaScript, SQL, DSA)..." aria-label="Search categories">
+          <button id="category-search-clear" class="clear-search-btn" style="display: none;" aria-label="Clear search">&times;</button>
+        </div>
+        <div class="filter-chips" id="category-filter-chips" role="radiogroup" aria-label="Filter category types">
+          <button class="chip active" data-filter="all">All Domains</button>
+          <button class="chip" data-filter="programming">Programming</button>
+          <button class="chip" data-filter="cs">CS & Systems</button>
+          <button class="chip" data-filter="general">General & Science</button>
+        </div>
+      </div>
+
+      <!-- Categories Full Grid -->
+      <div class="category-cards-grid" id="all-categories-grid">
+        <!-- Injected via JavaScript -->
+      </div>
+    </section>
+
+    <!-- ================= VIEW 3: QUIZ SETUP ================= -->
+    <section id="view-setup" class="view-section" aria-label="Quiz Setup">
+      <div class="setup-container">
+        <div class="setup-card">
+          <div class="setup-header">
+            <div class="setup-icon-badge" id="setup-category-icon">⚙️</div>
+            <div>
+              <h1 class="page-title" id="setup-title">Configure Quiz</h1>
+              <p class="page-subtitle">Customize parameters to tailor your test session</p>
+            </div>
+          </div>
+
+          <form id="quiz-setup-form" class="setup-form" onsubmit="event.preventDefault();">
+            <!-- Category Selection -->
+            <div class="form-group">
+              <label for="setup-category-select" class="form-label">Category / Domain</label>
+              <select id="setup-category-select" class="form-select">
+                <option value="all">🌟 All Categories (Mixed Challenge)</option>
+                <!-- Populated dynamically -->
+              </select>
+            </div>
+
+            <!-- Difficulty Selection -->
+            <div class="form-group">
+              <label class="form-label">Difficulty Level</label>
+              <div class="segmented-control" id="setup-difficulty-group" role="radiogroup" aria-label="Select difficulty">
+                <button type="button" class="segment-btn active" data-difficulty="all">Mixed</button>
+                <button type="button" class="segment-btn" data-difficulty="Easy">Easy</button>
+                <button type="button" class="segment-btn" data-difficulty="Medium">Medium</button>
+                <button type="button" class="segment-btn" data-difficulty="Hard">Hard</button>
+              </div>
+            </div>
+
+            <!-- Number of Questions -->
+            <div class="form-group">
+              <div class="label-row">
+                <label class="form-label">Number of Questions</label>
+                <span class="label-hint" id="available-questions-hint">Available: 110+ questions</span>
+              </div>
+              <div class="segmented-control" id="setup-count-group" role="radiogroup" aria-label="Select question count">
+                <button type="button" class="segment-btn" data-count="5">5</button>
+                <button type="button" class="segment-btn active" data-count="10">10</button>
+                <button type="button" class="segment-btn" data-count="15">15</button>
+                <button type="button" class="segment-btn" data-count="20">20</button>
+              </div>
+            </div>
+
+            <!-- Timer Selection -->
+            <div class="form-group">
+              <label class="form-label">Countdown Timer</label>
+              <div class="segmented-control" id="setup-timer-group" role="radiogroup" aria-label="Select timer duration">
+                <button type="button" class="segment-btn" data-timer="0">No Timer</button>
+                <button type="button" class="segment-btn" data-timer="120">2 Min</button>
+                <button type="button" class="segment-btn active" data-timer="300">5 Min</button>
+                <button type="button" class="segment-btn" data-timer="600">10 Min</button>
+              </div>
+            </div>
+
+            <!-- Quiz Summary Banner -->
+            <div class="setup-summary-banner">
+              <div class="summary-item">
+                <span class="summary-label">Selected Mode</span>
+                <span class="summary-val" id="summary-category-val">All Categories</span>
+              </div>
+              <div class="summary-item">
+                <span class="summary-label">Difficulty</span>
+                <span class="summary-val" id="summary-diff-val">Mixed</span>
+              </div>
+              <div class="summary-item">
+                <span class="summary-label">Questions</span>
+                <span class="summary-val" id="summary-count-val">10</span>
+              </div>
+              <div class="summary-item">
+                <span class="summary-label">Time Limit</span>
+                <span class="summary-val" id="summary-timer-val">5 Minutes</span>
+              </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="setup-actions">
+              <button type="button" class="btn btn-secondary" id="setup-cancel-btn">Back to Categories</button>
+              <button type="button" class="btn btn-primary btn-lg" id="setup-start-quiz-btn">
+                <span>Start Quiz Now</span> &rarr;
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= VIEW 4: QUIZ INTERFACE ================= -->
+    <section id="view-quiz" class="view-section" aria-label="Active Quiz">
+      <div class="quiz-container">
+        <!-- Quiz Top Utility Bar -->
+        <div class="quiz-topbar">
+          <div class="quiz-meta-left">
+            <span class="badge badge-category" id="quiz-badge-category">JavaScript</span>
+            <span class="badge badge-difficulty" id="quiz-badge-diff">Medium</span>
+          </div>
+
+          <div class="quiz-meta-center">
+            <div class="quiz-timer-box" id="quiz-timer-box">
+              <span class="timer-icon" aria-hidden="true">⏱</span>
+              <span class="timer-display" id="quiz-timer-text">05:00</span>
+            </div>
+          </div>
+
+          <div class="quiz-meta-right">
+            <button class="icon-btn-text" id="quiz-bookmark-btn" title="Bookmark this question for study">
+              <span class="bm-icon" id="quiz-bm-icon">🔖</span>
+              <span class="bm-text" id="quiz-bm-text">Bookmark</span>
+            </button>
+            <button class="btn btn-ghost btn-sm" id="quiz-quit-btn" title="Exit this quiz">Exit</button>
+          </div>
+        </div>
+
+        <!-- Progress Indicator -->
+        <div class="quiz-progress-wrapper">
+          <div class="progress-info-row">
+            <span class="progress-question-count" id="quiz-progress-text">Question 1 of 10</span>
+            <span class="progress-pct" id="quiz-progress-pct">10% Completed</span>
+          </div>
+          <div class="progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="10">
+            <div class="progress-fill" id="quiz-progress-bar" style="width: 10%;"></div>
+          </div>
+        </div>
+
+        <!-- Question Card -->
+        <div class="question-card" id="question-card">
+          <h2 class="question-heading" id="quiz-question-title">Loading question...</h2>
+
+          <!-- Options Container -->
+          <div class="options-container" id="quiz-options-container" role="radiogroup" aria-label="Answer options">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+
+        <!-- Quiz Navigation Controls -->
+        <div class="quiz-nav-actions">
+          <button class="btn btn-secondary" id="quiz-prev-btn" disabled>
+            &larr; Previous
+          </button>
+          <div class="quiz-nav-center-status">
+            <span id="quiz-answered-count-indicator">0 of 10 Answered</span>
+          </div>
+          <div class="quiz-nav-right-actions">
+            <button class="btn btn-secondary" id="quiz-next-btn">
+              Next &rarr;
+            </button>
+            <button class="btn btn-primary" id="quiz-submit-btn">
+              Submit Quiz 🏁
+            </button>
+          </div>
+        </div>
+
+        <!-- Question Navigator Grid -->
+        <div class="question-navigator-section">
+          <div class="navigator-header">
+            <span class="navigator-title">Question Navigator</span>
+            <div class="navigator-legend">
+              <span class="legend-item"><span class="legend-dot current"></span> Current</span>
+              <span class="legend-item"><span class="legend-dot answered"></span> Answered</span>
+              <span class="legend-item"><span class="legend-dot unanswered"></span> Unanswered</span>
+              <span class="legend-item"><span class="legend-dot bookmarked"></span> Bookmarked</span>
+            </div>
+          </div>
+          <div class="navigator-grid" id="quiz-navigator-grid" role="group" aria-label="Question jump buttons">
+            <!-- Injected by JS -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= VIEW 5: RESULTS ================= -->
+    <section id="view-results" class="view-section" aria-label="Quiz Results">
+      <div class="results-container">
+        <div class="results-card">
+          <div class="results-header">
+            <div class="results-trophy-wrap" id="results-trophy-wrap">🏆</div>
+            <h1 class="results-title" id="results-headline">Outstanding Achievement!</h1>
+            <p class="results-feedback" id="results-feedback-text">You have demonstrated exceptional mastery over these questions.</p>
+          </div>
+
+          <!-- Circular Radial Progress Chart & Core Score -->
+          <div class="results-chart-section">
+            <div class="radial-chart-container">
+              <svg class="radial-chart-svg" viewBox="0 0 160 160" width="160" height="160">
+                <circle class="radial-chart-bg" cx="80" cy="80" r="70"></circle>
+                <circle class="radial-chart-fill" id="results-radial-fill" cx="80" cy="80" r="70"></circle>
+              </svg>
+              <div class="radial-chart-content">
+                <span class="radial-pct" id="results-percentage">80%</span>
+                <span class="radial-label">Accuracy</span>
+              </div>
+            </div>
+
+            <div class="score-callout">
+              <span class="score-points" id="results-score-fraction">8 / 10</span>
+              <span class="score-points-label">Total Questions Correct</span>
+            </div>
+          </div>
+
+          <!-- Metric Cards Grid -->
+          <div class="results-metrics-grid">
+            <div class="metric-card metric-correct">
+              <div class="metric-icon">✅</div>
+              <div class="metric-val" id="results-correct-count">8</div>
+              <div class="metric-label">Correct</div>
+            </div>
+            <div class="metric-card metric-incorrect">
+              <div class="metric-icon">❌</div>
+              <div class="metric-val" id="results-incorrect-count">2</div>
+              <div class="metric-label">Incorrect</div>
+            </div>
+            <div class="metric-card metric-unanswered">
+              <div class="metric-icon">⏭</div>
+              <div class="metric-val" id="results-unanswered-count">0</div>
+              <div class="metric-label">Unanswered</div>
+            </div>
+            <div class="metric-card metric-time">
+              <div class="metric-icon">⏱</div>
+              <div class="metric-val" id="results-time-taken">02:45</div>
+              <div class="metric-label">Time Taken</div>
+            </div>
+          </div>
+
+          <!-- Results Actions -->
+          <div class="results-actions">
+            <button class="btn btn-primary btn-lg" id="results-review-btn">
+              <span>📖</span> Review Answers & Explanations
+            </button>
+            <button class="btn btn-secondary" id="results-retry-btn">
+              <span>🔄</span> Retry This Quiz
+            </button>
+            <button class="btn btn-secondary" id="results-new-quiz-btn">
+              <span>⚙️</span> New Quiz
+            </button>
+            <button class="btn btn-ghost" id="results-home-btn">
+              <span>🏠</span> Back to Home
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= VIEW 6: REVIEW ANSWERS ================= -->
+    <section id="view-review" class="view-section" aria-label="Review Answers">
+      <div class="review-container">
+        <div class="review-header-row">
+          <div>
+            <h1 class="page-title">Detailed Quiz Review</h1>
+            <p class="page-subtitle">Inspect your selections, examine the correct answers, and understand the technical rationale.</p>
+          </div>
+          <div class="review-header-actions">
+            <button class="btn btn-secondary" id="review-back-results-btn">&larr; Back to Results</button>
+            <button class="btn btn-primary" id="review-home-btn">Home</button>
+          </div>
+        </div>
+
+        <!-- Filter bar for questions -->
+        <div class="review-filter-bar">
+          <div class="filter-chips" id="review-filter-chips">
+            <button class="chip active" data-review-filter="all">All Questions (<span id="rev-count-all">0</span>)</button>
+            <button class="chip" data-review-filter="correct">✅ Correct (<span id="rev-count-correct">0</span>)</button>
+            <button class="chip" data-review-filter="incorrect">❌ Incorrect (<span id="rev-count-incorrect">0</span>)</button>
+            <button class="chip" data-review-filter="unanswered">⏭ Unanswered (<span id="rev-count-unanswered">0</span>)</button>
+          </div>
+        </div>
+
+        <!-- Question Review Cards List -->
+        <div class="review-list" id="review-questions-list">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= VIEW 7: USER DASHBOARD ================= -->
+    <section id="view-dashboard" class="view-section" aria-label="User Dashboard">
+      <div class="dashboard-container">
+        <div class="dashboard-banner">
+          <div class="dashboard-greeting">
+            <div class="user-avatar">👨‍💻</div>
+            <div>
+              <h1 class="page-title">Personal Performance Dashboard</h1>
+              <p class="page-subtitle">Detailed analytics on your quiz attempts, category mastery, and consistency.</p>
+            </div>
+          </div>
+          <button class="btn btn-primary" id="dashboard-quick-quiz-btn">⚡ Take a Quiz</button>
+        </div>
+
+        <!-- Core KPI Grid -->
+        <div class="dashboard-stats-grid">
+          <div class="dash-stat-card">
+            <span class="dash-stat-icon">🎯</span>
+            <div class="dash-stat-info">
+              <span class="dash-stat-number" id="dash-stat-quizzes">0</span>
+              <span class="dash-stat-label">Quizzes Completed</span>
+            </div>
+          </div>
+          <div class="dash-stat-card">
+            <span class="dash-stat-icon">❓</span>
+            <div class="dash-stat-info">
+              <span class="dash-stat-number" id="dash-stat-questions">0</span>
+              <span class="dash-stat-label">Questions Answered</span>
+            </div>
+          </div>
+          <div class="dash-stat-card">
+            <span class="dash-stat-icon">📊</span>
+            <div class="dash-stat-info">
+              <span class="dash-stat-number" id="dash-stat-accuracy">0%</span>
+              <span class="dash-stat-label">Average Accuracy</span>
+            </div>
+          </div>
+          <div class="dash-stat-card">
+            <span class="dash-stat-icon">🏆</span>
+            <div class="dash-stat-info">
+              <span class="dash-stat-number" id="dash-stat-best">0%</span>
+              <span class="dash-stat-label">Best Single Score</span>
+            </div>
+          </div>
+          <div class="dash-stat-card">
+            <span class="dash-stat-icon">🔥</span>
+            <div class="dash-stat-info">
+              <span class="dash-stat-number" id="dash-stat-streak">0</span>
+              <span class="dash-stat-label">Day Streak (Best: <span id="dash-stat-best-streak">0</span>)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Two Column Breakdown -->
+        <div class="dashboard-cols-grid">
+          <!-- Category Mastery Column -->
+          <div class="dash-card">
+            <div class="dash-card-header">
+              <h2 class="dash-card-title">Category Mastery Breakdown</h2>
+              <span class="dash-card-tag">Competency %</span>
+            </div>
+            <div class="category-bars-list" id="dash-category-bars">
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+
+          <!-- Recent Quiz Attempts Column -->
+          <div class="dash-card">
+            <div class="dash-card-header">
+              <h2 class="dash-card-title">Recent Quiz Attempts</h2>
+              <button class="btn btn-ghost btn-sm" id="dash-view-history-btn">View All History &rarr;</button>
+            </div>
+            <div class="recent-attempts-list" id="dash-recent-attempts">
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= VIEW 8: LEADERBOARD ================= -->
+    <section id="view-leaderboard" class="view-section" aria-label="Leaderboard">
+      <div class="leaderboard-container">
+        <div class="page-header">
+          <div class="badge badge-accent">Demo / Local Benchmark</div>
+          <h1 class="page-title">Top Performers Leaderboard</h1>
+          <p class="page-subtitle">
+            Frontend demonstration leaderboard comparing your locally recorded best results against simulated standard benchmarks.
+          </p>
+        </div>
+
+        <div class="leaderboard-card">
+          <div class="leaderboard-table-responsive">
+            <table class="leaderboard-table" aria-label="Leaderboard ranking">
+              <thead>
+                <tr>
+                  <th scope="col">Rank</th>
+                  <th scope="col">Player Profile</th>
+                  <th scope="col">Accuracy</th>
+                  <th scope="col">Quizzes Taken</th>
+                  <th scope="col">Streak</th>
+                  <th scope="col">Status</th>
+                </tr>
+              </thead>
+              <tbody id="leaderboard-tbody">
+                <!-- Rendered by JS -->
+              </tbody>
+            </table>
+          </div>
+          <div class="leaderboard-footer-note">
+            <span class="info-icon">ℹ️</span>
+            <span>Your rank dynamically recalculates based on your LocalStorage quiz history and accuracy. No remote server is queried.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= VIEW 9: SAVED / BOOKMARKS ================= -->
+    <section id="view-bookmarks" class="view-section" aria-label="Bookmarked Questions">
+      <div class="bookmarks-container">
+        <div class="page-header-row">
+          <div>
+            <h1 class="page-title">Saved Questions</h1>
+            <p class="page-subtitle">Review questions you bookmarked during quizzes for focused revision.</p>
+          </div>
+          <button class="btn btn-secondary btn-sm" id="clear-all-bookmarks-btn">Clear All Bookmarks</button>
+        </div>
+
+        <!-- Search Saved Questions -->
+        <div class="filter-bar">
+          <div class="search-input-wrapper">
+            <span class="search-icon" aria-hidden="true">🔍</span>
+            <input type="text" id="bookmarks-search-input" class="search-input" placeholder="Search your bookmarked questions..." aria-label="Search saved questions">
+          </div>
+        </div>
+
+        <div class="bookmarks-list" id="bookmarks-list-container">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= VIEW 10: QUIZ HISTORY ================= -->
+    <section id="view-history" class="view-section" aria-label="Quiz History">
+      <div class="history-container">
+        <div class="page-header-row">
+          <div>
+            <h1 class="page-title">Full Quiz History</h1>
+            <p class="page-subtitle">Complete chronological record of all your completed quizzes.</p>
+          </div>
+          <button class="btn btn-danger btn-sm" id="clear-history-btn">Clear Full History</button>
+        </div>
+
+        <div class="history-list-card">
+          <div class="history-items-list" id="history-items-list">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= VIEW 11: SETTINGS ================= -->
+    <section id="view-settings" class="view-section" aria-label="Application Settings">
+      <div class="settings-container">
+        <div class="page-header">
+          <h1 class="page-title">Settings & Preferences</h1>
+          <p class="page-subtitle">Configure application behavior, audio signals, and storage</p>
+        </div>
+
+        <div class="settings-card">
+          <!-- Appearance -->
+          <div class="settings-section">
+            <h2 class="settings-section-title">🎨 Appearance</h2>
+            <div class="setting-row">
+              <div>
+                <div class="setting-title">Color Theme</div>
+                <div class="setting-desc">Toggle between crisp modern dark mode and clean light theme.</div>
+              </div>
+              <div class="segmented-control" id="settings-theme-control">
+                <button type="button" class="segment-btn active" data-theme-val="dark">🌙 Dark</button>
+                <button type="button" class="segment-btn" data-theme-val="light">☀️ Light</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sound Effects -->
+          <div class="settings-section">
+            <h2 class="settings-section-title">🔊 Audio Signals (Web Audio API)</h2>
+            <div class="setting-row">
+              <div>
+                <div class="setting-title">Sound Effects</div>
+                <div class="setting-desc">Pleasant subtle synthesized chimes for correct/incorrect answers and timer warnings. Pure browser synthesis, no external audio files.</div>
+              </div>
+              <div class="setting-action-group">
+                <button class="btn btn-ghost btn-sm" id="test-sound-btn">🎵 Test Audio</button>
+                <label class="toggle-switch">
+                  <input type="checkbox" id="setting-sound-toggle" checked>
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+            </div>
+
+            <div class="setting-row">
+              <div>
+                <div class="setting-title">Low Timer Audio Warning</div>
+                <div class="setting-desc">Play an alert pulse when under 60 seconds remain on the countdown.</div>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" id="setting-timer-sound-toggle" checked>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Quiz Preferences -->
+          <div class="settings-section">
+            <h2 class="settings-section-title">⚙️ Default Quiz Parameters</h2>
+            <div class="setting-row">
+              <div>
+                <div class="setting-title">Default Question Count</div>
+                <div class="setting-desc">Pre-selected question volume for quick-start sessions.</div>
+              </div>
+              <select id="setting-default-count-select" class="form-select form-select-sm">
+                <option value="5">5 Questions</option>
+                <option value="10" selected>10 Questions</option>
+                <option value="15">15 Questions</option>
+                <option value="20">20 Questions</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Danger Zone -->
+          <div class="settings-section danger-zone">
+            <h2 class="settings-section-title text-danger">⚠️ Danger Zone</h2>
+            <div class="setting-row">
+              <div>
+                <div class="setting-title">Reset All Progress & Storage</div>
+                <div class="setting-desc">Permanently erase all quiz attempts, accuracy records, streak count, and saved bookmarks from LocalStorage.</div>
+              </div>
+              <button class="btn btn-danger" id="reset-all-data-btn">Reset All Data</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ================= REUSABLE CONFIRMATION MODAL ================= -->
+  <div class="modal-backdrop" id="app-modal" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="modal-card">
+      <div class="modal-icon" id="modal-icon">⚠️</div>
+      <h2 class="modal-title" id="modal-title">Confirm Action</h2>
+      <p class="modal-message" id="modal-message">Are you sure you want to proceed?</p>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" id="modal-cancel-btn">Cancel</button>
+        <button class="btn btn-primary" id="modal-confirm-btn">Confirm</button>
+      </div>
     </div>
   </div>
+
+  <!-- ================= RESUME QUIZ MODAL ================= -->
+  <div class="modal-backdrop" id="resume-modal" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="modal-card">
+      <div class="modal-icon">💾</div>
+      <h2 class="modal-title">Resume Previous Quiz?</h2>
+      <p class="modal-message">We found an active quiz session in progress from before. Would you like to resume where you left off or start a new quiz?</p>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" id="resume-discard-btn">Start Fresh</button>
+        <button class="btn btn-primary" id="resume-confirm-btn">Resume Quiz</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= TOAST NOTIFICATION CONTAINER ================= -->
+  <div class="toast-container" id="toast-container" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- ================= APPLICATION FOOTER ================= -->
+  <footer class="app-footer" role="contentinfo">
+    <div class="footer-container">
+      <div class="footer-brand-col">
+        <div class="brand">
+          <div class="brand-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+            </svg>
+          </div>
+          <span class="brand-name">Quiz<span>Master</span></span>
+        </div>
+        <p class="footer-tagline">Test Your Knowledge. Track Your Progress. Master Every Topic.</p>
+        <div class="footer-tech-badge">
+          <span>⚡ Built with Vanilla HTML5, CSS3 & JavaScript</span>
+        </div>
+      </div>
+
+      <div class="footer-links-col">
+        <h3 class="footer-heading">Navigation</h3>
+        <ul class="footer-nav">
+          <li><a href="#" data-footer-view="home">Home</a></li>
+          <li><a href="#" data-footer-view="categories">Categories</a></li>
+          <li><a href="#" data-footer-view="dashboard">Dashboard</a></li>
+          <li><a href="#" data-footer-view="leaderboard">Leaderboard</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-links-col">
+        <h3 class="footer-heading">Resources</h3>
+        <ul class="footer-nav">
+          <li><a href="#" data-footer-view="bookmarks">Saved Questions</a></li>
+          <li><a href="#" data-footer-view="history">Quiz History</a></li>
+          <li><a href="#" data-footer-view="settings">Settings</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-links-col">
+        <h3 class="footer-heading">Architecture</h3>
+        <ul class="footer-nav">
+          <li><span>110+ Questions Bank</span></li>
+          <li><span>LocalStorage Engine</span></li>
+          <li><span>Web Audio Synthesizer</span></li>
+          <li><span>Full WCAG Accessibility</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; 2026 QuizMaster Platform. Designed for technical interview preparation and portfolio demonstration.</p>
+    </div>
+  </footer>
 
   <script src="script.js"></script>
 </body>
