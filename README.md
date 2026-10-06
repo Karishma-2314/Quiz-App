@@ -179,10 +179,10 @@ QuizMaster isolates application state into structured, defensively parsed keys:
 
 ## Live Project
 
-Deployment pending
+🔗 **[QuizMaster — Live Demo](https://karishma-2314.github.io/Quiz-App/)**
 
 ---
 
 ## GitHub Repository
 
-Deployment pending
+🔗 **[github.com/Karishma-2314/Quiz-App](https://github.com/Karishma-2314/Quiz-App)**
